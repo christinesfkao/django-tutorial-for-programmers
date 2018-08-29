@@ -24,7 +24,7 @@ class Store(models.Model):
 
 class MenuItem(models.Model):
 
-    store = models.ForeignKey('Store', related_name='menu_items')
+    store = models.ForeignKey('Store', related_name='menu_items', on_delete=models.PROTECT)
     name = models.CharField(max_length=20)
     price = models.IntegerField()
 
@@ -44,6 +44,8 @@ class MenuItem(models.Model):
 你可能已經注意到，我們並沒有為 `Store` 的 `menu_items` 建立 attribute，但這裡 `related_name` 的值就是它。Django 會自動建立 foreign key 的 reverse relation，所以你不需要自行建立。
 
 在 `ForeignKey` 的狀況中，Django 預設會用 model 的名稱後面加 `_set` 來當作 reverse relation 的名稱，所以 `MenuItem.store` 的預設 reverse relation key 會是 `Store.menuitem_set`。你當然可以直接使用這個值，不過如果狀況允許，我個人推薦盡量還是手動設定這個值。即使設成和預設一樣，也比沒有設定好，因為 *explicit is better than implicit* 是 Python 的中心思想之一。
+
+`ForeignKey` 還有第三個 attribute `on_delete`。為了避免 `Store` 這個物件在操作過程中被刪掉，我們將值設為 `PROTECT`，其他值的選項可以參見[官方文件](https://docs.djangoproject.com/en/2.0/ref/models/fields/#django.db.models.ForeignKey.on_delete)。
 
 我們另外在兩個 models 都各加上了一個 [`__str__`](https://docs.python.org/3/reference/datamodel.html#object.__str__) 函式。這是 Python 用來把物件轉換成 `str` 的 hook；因為做網站時，常常需要把東西變成字串，所以這會很方便。
 
