@@ -24,7 +24,7 @@ class Store(models.Model):
 
 class MenuItem(models.Model):
 
-    store = models.ForeignKey('Store', related_name='menu_items', on_delete=models.)
+    store = models.ForeignKey('Store', related_name='menu_items', on_delete=models.SET_NULL, null=True)
     name = models.CharField(max_length=20)
     price = models.IntegerField()
 
